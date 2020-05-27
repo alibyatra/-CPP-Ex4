@@ -44,9 +44,6 @@ TEST_CASE("First Game")
     board.move(2, {7, 3}, Board::MoveDIR::Left);
     CHECK(board.has_soldiers(1));
     CHECK(board.has_soldiers(2));
-    board.move(2, {7, 4}, Board::MoveDIR::Right);
-    CHECK(board.has_soldiers(1));
-    CHECK(board.has_soldiers(2));
 
     CHECK_THROWS_MESSAGE(board.move(1, {0, 0}, Board::MoveDIR::Up), "ERR: this soldier is dead..");
     CHECK_THROWS_MESSAGE(board.move(1, {1, 1}, Board::MoveDIR::Up), "ERR: this soldier is dead..");
