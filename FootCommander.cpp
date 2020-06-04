@@ -1,25 +1,18 @@
-#include <iostream>
-#include <vector>
 #include "FootCommander.hpp"
 
-void FootCommander::activate(vector<vector<Soldier *>> &board, pair<int, int> location)
+namespace WarGame
 {
-    FootSoldier::activate(board, location);
-    activateC(board, location);
-}
-
-void FootCommander::activateC(vector<vector<Soldier *>> &board, pair<int, int> location)
-{
-    for (int i = 0; i < board.size(); i++)
+    void FootCommander::activate(std::vector<std::vector<Soldier *>> &board, std::pair<int, int> location)
     {
-        for (int j = 0; j < board[0].size(); j++)
-        {
-            Soldier *sol = board[i][j];
-            if (sol != nullptr && sol->getPlayerNum() == getPlayerNum())
-            {
-                if (dynamic_cast<Soldier*>(sol) && !dynamic_cast<FootCommander*>(sol)) 
-                    sol->activate(board, {i,j});
-            }
-        }
+        FootSoldier::activate(board, location);
     }
-} 
+
+    FootCommander::FootCommander(int team) : FootSoldier(team) 
+    {
+        setFullHP(150);
+        HP = getFullHP();
+        damage = 20;
+        commander = true;
+    }
+    FootCommander::~FootCommander() {}
+};

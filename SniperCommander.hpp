@@ -1,10 +1,13 @@
 #pragma once
 #include "Sniper.hpp"
 
-class SniperCommander : public Sniper
+namespace WarGame
 {
-    public:
-        SniperCommander(int playerID): Soldier(playerID, 120, 100){}
-        void activate(vector<vector<Soldier*>> &board, pair<int,int> location);
-        void activateC(vector<vector<Soldier *>> &board, pair<int, int> location);
+    class SniperCommander : public Sniper
+    {
+        public:
+            SniperCommander(int team);
+            void activate(std::vector<std::vector<Soldier*>> &board, std::pair<int,int> location);
+            ~SniperCommander();
+    };
 };

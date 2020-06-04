@@ -1,25 +1,38 @@
 #pragma once
+#include <cmath>
 #include <vector>
-#include <stdexcept>
-#include <math.h>
+#include <iostream>
 
-using namespace std;
+#define FOOT 0
+#define SNIPER 1
+#define PARAMEDIC 2
 
-class Soldier
+namespace WarGame 
 {
-  private:
-    int player;
-    int FullHP;
-    int HP;
-    int damage;
-    
-  public:
-    Soldier(int playerID, int H, int d) : player(playerID), HP(H), FullHP(H), damage(d) {}
-    virtual int getHealth() {return HP;}
-    virtual int getPlayerNum(){ return player;}
-    virtual int getFullHealth() {return FullHP;}
-    virtual int getDamage() {return damage;}
-    void setHealth(int H) {HP = H;}
-    virtual void activate(vector<vector<Soldier *>> &board, pair<int, int> location){};
-    virtual ~Soldier() {}
+  class Soldier 
+  {
+    private:
+      int FullHP;
+
+    public:
+        uint team;
+        uint type;
+        bool commander;
+        int HP;
+        int damage;
+
+        Soldier(uint team, uint type, bool commander, int HP, int damage);
+
+        virtual ~Soldier();
+
+        int getFullHP() const;
+
+        void setFullHP(int FullHP);
+
+        void heal();
+
+        virtual void activate(std::vector<std::vector<Soldier*>>& board, std::pair<int,int> location) = 0;
+
+        void activateTogether(std::vector<std::vector<Soldier*>>& board);
+    };
 };

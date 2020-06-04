@@ -1,24 +1,18 @@
 #include "ParamedicCommander.hpp"
 
-void ParamedicCommander::activate(vector<vector<Soldier *>> &board, pair<int, int> location)
+namespace WarGame 
 {
-    Paramedic::activate(board, location);
-    activateC(board, location);
-}
-void ParamedicCommander::activateC(vector<vector<Soldier *>> &board, pair<int, int> location)
-{
-    for (int i = 0; i < board.size(); i++)
+    void ParamedicCommander::activate(std::vector<std::vector<Soldier *>> &board, std::pair<int, int> location)
     {
-        for (int j = 0; j < board[i].size(); j++)
-        {
-            Soldier *sol = board[i][j];
-            if (sol != nullptr && sol->getPlayerNum() == getPlayerNum())
-            {
-                if (dynamic_cast<Paramedic*>(sol) && !dynamic_cast<ParamedicCommander*>(sol))
-                {
-                    sol->activate(board, {i, j});
-                }
-            }
-        }
+        Paramedic::activate(board, location);
     }
-}
+
+    ParamedicCommander::ParamedicCommander(int team) : Paramedic(team) 
+    {
+        setFullHP(200);
+        HP = getFullHP();
+        commander = true;
+    }
+
+    ParamedicCommander::~ParamedicCommander() {}
+};

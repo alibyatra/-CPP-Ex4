@@ -14,6 +14,8 @@
 #include "ParamedicCommander.hpp"
 #include <cassert>
 
+using namespace WarGame;
+
 //check exceptions in diff cases
 
 TEST_CASE("Sniper VS Sniper") { //good

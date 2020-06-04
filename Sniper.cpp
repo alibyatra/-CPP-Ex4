@@ -1,34 +1,50 @@
-#include <iostream>
 #include "Sniper.hpp"
 
-void Sniper::activate(vector<vector<Soldier*>> &board,pair<int,int> location)
+namespace WarGame 
 {
-    Soldier *temp = nullptr;
+    Sniper::Sniper(int team) : Soldier(team, SNIPER, false, 100, 50) 
+    {
+        setFullHP(100);
+    }
+
+    Sniper::~Sniper() {}
+
+    void Sniper::activate(std::vector<std::vector<Soldier*>> &board, std::pair<int,int> location)
+    {
+    std::pair<int,int> goal (location);
     int strongest = 0;
-    int one, two;
     for (int i = 0; i < board.size(); i++)
     {
         for (int j = 0; j < board[i].size(); j++)
         {
-            Soldier *sol = board[i][j];
-            if (sol != nullptr && sol->getPlayerNum() != getPlayerNum())
+            if(board[i][j] == nullptr)
             {
-                if (sol->getHealth() > strongest)
-                {
-                    strongest = sol->getHealth();
-                    temp = sol;
-                    one = i;
-                    two = j;
-                }
+                continue;
+            }
+            else if (board[i][j]->team == team)
+            {
+                continue;
+            }
+            if (board[i][j]->HP > strongest)
+            {
+                strongest = board[i][j]->HP;
+                goal = {i,j};
             }
         }
     }
-    if (temp != nullptr)
+    if (!board[goal.first][goal.second]->commander) 
     {
-        temp->setHealth(temp->getHealth() - getDamage());
-        if (temp->getHealth() <= 0)
-        {
-            board[one][two] = nullptr;                
-        }
+        board[goal.first][goal.second]->HP -= 50;
+    } 
+    else
+    {
+        board[goal.first][goal.second]->HP -= 100;
     }
-}
+    if (board[goal.first][goal.second]->HP <= 0)
+    {
+        Soldier* dead = board[goal.first][goal.second];
+        board[goal.first][goal.second] = nullptr;
+        delete dead;
+    }
+    }
+};

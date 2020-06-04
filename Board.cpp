@@ -1,75 +1,110 @@
 #include "Board.hpp"
-#include <map>
-
-using namespace std;
+#include "FootCommander.hpp"
+#include "SniperCommander.hpp"
+#include "ParamedicCommander.hpp"
 
 namespace WarGame 
 {
-    std::map<int, int> m;
-    Soldier *&Board :: operator[](std::pair<int,int> location){
-             return board[location.first][location.second];
+    Soldier*& Board::operator[](std::pair<int,int> location){
+            Board::check(location);
+            return Board::board[location.first][location.second];
         }
 
-        Soldier *Board:: operator[](std::pair<int,int> location) const{
-            return  board[location.first][location.second];
+        Soldier* Board::operator[](std::pair<int,int> location) const{
+            Board::check(location);
+            return Board::board[location.first][location.second];
         }
 
         void Board::move(uint player_number, std::pair<int,int> source, MoveDIR direction) 
         {
-            if ((*this)[source] == nullptr)
+            if (!has_soldiers(player_number)) 
             {
-                throw runtime_error("No soldier at the source point");
+                return;
             }
-            Soldier *sol = (*this)[source];
-            if (sol->getPlayerNum() != player_number)
+            Board::check(source);
+            if (board[source.first][source.second] == nullptr)
             {
-                throw runtime_error("Illegal Move");
+                throw std::invalid_argument("ERROR! the given source location is null");
             }
-            std::pair<int, int> move;
+            else if (board[source.first][source.second]->team != player_number) 
+            {
+            throw std::invalid_argument("ERROR! this soldier belongs to the opposing team");
+            }
+            std::pair<int, int> move (source);
 		    switch (direction)
 		    {
 		    case Left:
-                move.first = source.first;
-                move.second = source.second - 1;
+                if (move.second - 1 < 0) 
+                {
+                    throw std::invalid_argument("ERROR! An illegal move");
+                }
+                move.second -= 1;
                 break;
             case Right:
-                move.first = source.first;
-                move.second = source.second + 1;
+                if (move.second + 1 == Board::board[0].size()) 
+                {
+                    throw std::invalid_argument("ERROR! An illegal move");
+                }
+                move.second += 1;
                 break;
             case Up:
-                move.first = source.first + 1;
-                move.second = source.second;
+                if (move.first + 1 == Board::board.size()) 
+                {
+                    throw std::invalid_argument("ERROR! An illegal move");
+                }
+                move.first += 1;
                 break;
             case Down:
-                move.first = source.first - 1;
-                move.second = source.second;
+                if (move.first - 1 < 0) 
+                {
+                    throw std::invalid_argument("ERROR! An illegal move");
+                }
+                move.first -= 1;
                 break;
 		    }
-            if(move.first >= board.size() || move.first < 0 || move.second >= board[0].size() || move.second < 0) 
-			throw invalid_argument("got out from the board");
-            if((*this)[move] = nullptr)
-            {
-                throw runtime_error("Dest has a soldier already");
-            }
-		    (*this)[move] = sol;
-            (*this)[source] = nullptr;
-		    sol->activate(board, move);
+            if (board[move.first][move.second] != nullptr) {
+            throw std::invalid_argument("ERROR! there is already another soldier at the move");
         }
-
-         bool Board::has_soldiers(uint player_number) const 
+        board[move.first][move.second] = board[source.first][source.second];
+        board[source.first][source.second] = nullptr;
+        if (board[move.first][move.second]->commander) 
         {
-            for (int i = 0; i < board.size(); i++)
+            board[move.first][move.second]->activate(board, move);
+            board[move.first][move.second]->activateTogether(board);
+        } 
+        else 
+        {
+            board[move.first][move.second]->activate(board, move);
+        }
+    }
+
+    bool Board::has_soldiers(uint player_number) const 
+    {
+        for (int i = 0; i < board.size(); i++)
+        {
+            for (int j = 0; j < board[i].size(); j++)
             {
-                for (int j = 0; j < board[i].size(); j++)
+                if (board[i][j] == nullptr)
                 {
-                    Soldier *check = this->board[i][j];
-                    if (check != nullptr)
-                    {
-                        if (check->getPlayerNum() == player_number)
-                        return true;
-                    }
+                    continue;
+                }
+                if (board[i][j]->team == player_number)
+                {
+                    return true;
                 }
             }
-            return false;
         }
-}
+        return false;
+    }
+    void Board::check(std::pair<int,int> location) const 
+    {
+        if (location.first < 0 | location.first >= board.size()) 
+        {
+            throw std::runtime_error("ERROR! the given location is out of bounds");
+        }
+        else if (location.second < 0 | location.second >= board[0].size()) 
+        {
+            throw std::runtime_error("ERROR! the given location is out of bounds");
+        }
+    }
+};
