@@ -1,15 +1,25 @@
-#include <string>
-#include <iostream>
-#include <vector>
-#include <stdexcept>
 #include "SniperCommander.hpp"
-#include "Board.hpp"
-using namespace std;
 
-namespace WarGame
+void SniperCommander::activate(vector<vector<Soldier *>> &board, pair<int, int> location)
 {
-    void SniperCommander::activate(int x, int y, Board& board_f)
+    Sniper::activate(board, location);
+    activateC(board, location);
+}
+
+void SniperCommander::activateC(vector<vector<Soldier *>> &board, pair<int, int> location)
+{
+    for (int i = 0; i < board.size(); i++)
     {
-        
+        for (int j = 0; j < board[i].size(); j++)
+        {
+            Soldier *sol = board[i][j];
+            if (sol != nullptr && sol->getPlayerNum() == getPlayerNum())
+            {
+                if (dynamic_cast<Sniper*>(sol) && !dynamic_cast<SniperCommander*>(sol))
+                {
+                    sol->activate(board, {i, j});
+                }
+            }
+        }
     }
 }

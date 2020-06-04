@@ -1,13 +1,13 @@
-#ifndef BOARD_HPP_
-#define BOARD_HPP_
 #include <string>
 #include <vector>
 #include <stdexcept>
 #include "Soldier.hpp"
 
-namespace WarGame {
+namespace WarGame 
+{
 
-class Board {
+class Board 
+{
 	private:
 		std::vector<std::vector<Soldier*>> board;
 	public:
@@ -24,8 +24,10 @@ class Board {
     void move(uint player_number, std::pair<int,int> source, MoveDIR direction);
 
     bool has_soldiers(uint player_number) const;
- 	std::vector<std::vector<Soldier*>>& getBoard_s(){ return board;}
-	
+
+ 	  ~Board()
+      {
+        board.clear();
+      }
 };
 }
-#endif

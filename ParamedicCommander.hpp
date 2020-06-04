@@ -1,18 +1,10 @@
 #pragma once
-#include <string>
-#include <stdexcept>
-#include <vector>
 #include "Paramedic.hpp"
 
-namespace WarGame
+class ParamedicCommander : public Paramedic
 {
-    class ParamedicCommander : public Paramedic{
-
-        public:
-        ParamedicCommander(uint player): Paramedic(player){
-			FullHP += 100;
-			HP += 100;
-		}
-        void activate(int x, int y, Board& board_f) override;
-    };
-}
+    public:
+        ParamedicCommander(int playerID) : Soldier(playerID, 200, 0){}
+        void activate(vector<vector<Soldier*>> &board, pair<int,int> location);
+        void activateC(vector<vector<Soldier *>> &board, pair<int, int> location);
+};

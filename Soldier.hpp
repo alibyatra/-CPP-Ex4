@@ -1,33 +1,25 @@
-#ifndef SOLDIER_HPP_
-#define SOLDIER_HPP_
-#include <string>
+#pragma once
 #include <vector>
 #include <stdexcept>
+#include <math.h>
 
-namespace WarGame
+using namespace std;
+
+class Soldier
 {
-  class Board;
-
-  class Soldier
-  {
-  protected:
-    uint player;
-    uint FullHP;
+  private:
+    int player;
+    int FullHP;
     int HP;
-    uint damage;
- 
-
-  public:
-    Soldier(uint playerID, uint h, uint p = 0) : player(playerID), FullHP(h), HP(h), damage(p) {}
-    double distance(int x1, int y1, int x2, int y2);
-    bool heal();
-    int getHealth() {return HP;};
-    void hurm(uint i);
-    int getPlayerNum(){ return player;}
-    virtual void activate(int x, int y, Board& board_f) = 0;
-    virtual void printSoldier();
+    int damage;
     
-  };
-
-} 
-#endif 
+  public:
+    Soldier(int playerID, int H, int d) : player(playerID), HP(H), FullHP(H), damage(d) {}
+    virtual int getHealth() {return HP;}
+    virtual int getPlayerNum(){ return player;}
+    virtual int getFullHealth() {return FullHP;}
+    virtual int getDamage() {return damage;}
+    void setHealth(int H) {HP = H;}
+    virtual void activate(vector<vector<Soldier *>> &board, pair<int, int> location){};
+    virtual ~Soldier() {}
+};

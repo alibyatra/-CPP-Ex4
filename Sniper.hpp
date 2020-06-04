@@ -1,17 +1,10 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <stdexcept>
 #include "Soldier.hpp"
 
-namespace WarGame
+class Sniper : public virtual Soldier
 {
-    class Sniper : public Soldier{
-        protected:
-
-        public:
-        Sniper(uint player): Soldier(player, 100, 50){}
-        void activate(int x, int y, Board& board_f) override;
-    };
-
-} 
+    public:
+        Sniper(int playerID): Soldier(playerID, 100, 50){}
+        Sniper() : Soldier(0,0,0) {}
+        void activate(vector<vector<Soldier*>> &board, pair<int,int> location);
+};
